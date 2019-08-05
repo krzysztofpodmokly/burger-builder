@@ -14,8 +14,8 @@ const burger = props => {
       // });
     })
     .reduce((arr, el) => {
-      return arr.concat(el);
-    }, []);
+      return arr.concat(el); // example input: [[1,2,3], ['c', 'd', 'e'], [4, 'str', 38]];
+    }, []); // example output: [1, 2, 3, "c", "d", "e", 4, "str", 38]
 
   if (transformedIngredients.length === 0) {
     transformedIngredients = <p>Please start adding ingredients!</p>;
