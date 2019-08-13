@@ -24,6 +24,20 @@ export const authFail = error => {
   };
 };
 
+export const logout = () => {
+  return {
+    type: actionTypes.AUTH_LOGOUT
+  };
+};
+
+export const checkAuthTimeout = expirationTime => {
+  return async dispatch => {
+    setTimeout(() => {
+      dispatch(logout());
+    }, expirationTime * 1000);
+  };
+};
+
 export const auth = (email, password, isSignup) => {
   return async dispatch => {
     try {
@@ -40,10 +54,17 @@ export const auth = (email, password, isSignup) => {
           'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDvm_B00J-SUESqeA4iIYeKNoSGJoIRew8';
       }
       const res = await axios.post(url, authData);
-      console.log(res.data);
       dispatch(authSuccess(res.data.idToken, res.data.localId));
+      dispatch(checkAuthTimeout(res.data.expiresIn));
     } catch (error) {
-      dispatch(authFail(error));
+      dispatch(authFail(error.response.data.error));
     }
+  };
+};
+
+export const setAuthRedirectPath = path => {
+  return {
+    type: actionTypes.SET_AUTH_REDIRECT_PATH,
+    payload: path
   };
 };
